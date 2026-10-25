@@ -1,0 +1,64 @@
+sprint: sprint09b_adjoint_policy_20261025
+title: Backpropagation through the decision — adjoint policy learning on cost-aware P&L
+research_status: PILOT_ONLY_REUSED_ARCHIVE
+orders: none
+allow_live_orders: false
+parent_sprint09_plan_hash: 0a6a0e647f79f8d55934b9ebe019bd58dbe4b0697d59549f24d2ac504dba60bc
+parent_08h1_plan_hash: b9c573f1fd8947297f420ba748c6a7aea702b2b3ec7926e617835c9d504a52ea
+critique_of_sprint09:
+  - fixed_gaussian_gradient_is_linear_transform_of_state
+  - no_parameter_was_updated_by_any_gradient
+  - track_c_p5_never_run
+  - policies_were_hand_thresholds
+hypotheses:
+  H_ADJ: a tiny recurrent policy trained by BPTT on cost-aware P&L beats P0 and fixed rules on exact discrete replay of later data
+  H_ABSTAIN: the gradient of P&L w.r.t. trading intensity is negative on noise; the trained policy learns a no-trade band wider than the spread
+  H_DECISION_LOSS: a P&L-trained policy differs from forecast-then-threshold on identical features
+  H_GEOM_IN_POLICY: adding E / grad features to the policy changes exact-sim P&L on later data (ablation)
+  H_SALIENCY: input gradients identify a small set of load-bearing features; partner-shuffled training removes them
+domains:
+  crypto:
+    pairs: [BTC-ETH, BTC-DOGE]
+    train_dates: ["2026-10-13", "2026-10-14", "2026-10-15"]
+    validation_dates: ["2026-10-18"]
+    holdout_dates: ["2026-10-19"]
+  commodities:
+    pairs: [GOLD-SILVER, GOLD-WTI]
+    discovery_windows: 15
+    validation_windows: 4
+    holdout_windows: 4
+grid_seconds: 5
+execution_delay: next_valid_5s_sample
+policy:
+  architecture: linear_or_tanh8_recurrent_on_inventory
+  hidden: [0, 8]
+  inventory_range: [-1, 1]
+  features_own: [dB_open, rB5, spreadB, imbB, phase_frac, T_left_frac]
+  features_partner: [dA_open, rA5, spreadA]
+  features_geom: [E_gauss, grad_zA_gauss, grad_zB_gauss, E_resid]
+surrogate_loss: sum(q_t * dm_{t+1}) - sum((spread_t/2 + fee_t) * |q_t - q_{t-1}|) - lambda * sum(q_t^2)
+lambda_risk: [0.0, 0.001]
+fee_modes: [ZERO_FEE_BOUND, ILLUSTRATIVE_FEE_STRESS]
+optimizer: adam
+learning_rate: 0.01
+epochs: 150
+early_stopping: validation_surrogate_only
+seed: 7
+exact_simulator:
+  discretize: hysteresis_band_on_q
+  band_on: 0.5
+  band_off: 0.2
+  entry_price: ask_of_side_at_next_valid_sample
+  exit_price: bid_of_side_at_next_valid_sample
+  one_position_per_ticker: true
+  no_entry_final_seconds: 60
+  fill_label: NOT_REAL_FILL
+baselines:
+  - P0_zero
+  - P1_momentum_fixed
+  - P1_fade_fixed
+  - forecast_then_threshold_ridge
+  - adjoint_policy_label_shuffled_null
+  - adjoint_policy_partner_shuffled_null
+verdicts_never: [ARBITRAGE_CONFIRMED, FILL_CONFIRMED, INDEPENDENTLY_PROFITABLE, EXECUTED]
+fee_status: FEE_UNVERIFIED
