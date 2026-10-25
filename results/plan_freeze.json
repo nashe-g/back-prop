@@ -1,0 +1,6 @@
+{
+  "frozen_at_utc": "2026-10-25T17:58:21.631363+00:00",
+  "plan_hash": "0df3f8846a6e6d57b826decc3e185c8fb1adc0db4e331f96412847bcd442bc93",
+  "source_states_sha256": "a6204c127559bdbf1811c0017b9821d672e28c48e1380beab84e729cb00a1ab6",
+  "torch": "2.14.1"
+}

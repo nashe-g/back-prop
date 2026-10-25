@@ -4,6 +4,8 @@ A tiny recurrent policy trained by back-propagation through time on cost-aware P
 
 The code is the Sprint 09B experiment (Kalshi 15-minute Up/Down). Point `--states` at a parquet you build from your own tape.
 
+The run on the original archive is in `results/`. Start with `results/sprint09b_report_for_quant_researchers.md`. That folder is output, not input; do not pass it to `--states`.
+
 ## What it does
 
 Policy, inventory in (−1, 1):

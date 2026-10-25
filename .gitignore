@@ -3,4 +3,5 @@ __pycache__/
 *.pyc
 .venv/
 *.parquet
+!results/paper_trades.parquet
 .DS_Store

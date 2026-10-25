@@ -1,0 +1,9 @@
+pair,config,fee_mode,val_per_window_cents,val_ci,holdout_per_window_cents,holdout_ci,both_halves_clear_zero,sign_flip_null_max_holdout_cents,verdict,reason
+GOLD-WTI,own h0 lam0,ZERO_FEE_BOUND,12.0,"[-11.3, 33.1]",14.7,"[5.9, 23.3]",False,32.5,NOT_A_CANDIDATE,validation CI spans zero; 4+4 windows one day; sign-flip null (seed 7) exceeds real policy on holdout; policy is window-momentum with bias (hold most of window)
+GOLD-WTI,own+partner h0 lam0,ILLUSTRATIVE_FEE_STRESS,8.5,"[-13.9, 31.0]",14.2,"[7.3, 22.0]",False,39.5,NOT_A_CANDIDATE,validation CI spans zero; sign-flip null exceeds real policy on holdout; n=4 windows per half
+GOLD-WTI,own+partner h8 lam0,ZERO_FEE_BOUND,12.5,"[-9.4, 34.5]",24.0,"[13.4, 38.5]",False,32.5,NOT_A_CANDIDATE,validation CI spans zero; same day; abstains under fee stress
+GOLD-WTI,own+partner h0 lam0.001,ZERO_FEE_BOUND,22.3,"[-2.6, 42.3]",12.2,"[1.9, 28.0]",False,32.5,NOT_A_CANDIDATE,validation CI spans zero; fee-stress holdout -3.8
+BTC-ETH,own+partner h8 lam0,ZERO_FEE_BOUND,2.4,"[-6.6, 10.9]",-1.3,"[-32.7, 31.6]",False,-11.6,NOT_A_CANDIDATE,validation CI spans zero; holdout negative; abstains under fee stress
+BTC-ETH,all 9 configs,ILLUSTRATIVE_FEE_STRESS,0.0,"[0, 0]",0.0,"[0, 0]",False,0.0,ABSTENTION_LEARNED,validation-selected policy is q~0 in 9/9 (mean|q| 0.0003-0.03; all weights <0.03); own-leg-only configs converge to 0 in-sample too; partner/geom configs fit in-sample (+4 to +13) and lose on validation (-6 to -15)
+BTC-DOGE,all 9 configs,ILLUSTRATIVE_FEE_STRESS,0.0,"[0, 0]",0.0,"[0, 0]",False,0.0,ABSTENTION_LEARNED,8/9 configs abstain; the one trading config (geom h0) is -11.5 on holdout
+GOLD-SILVER,all configs,both,n/a,n/a,n/a,n/a,False,-28.8,NOT_A_CANDIDATE,abstains under fee in 8/9; zero-fee holdout negative in all trading configs; train_last +3 to +34 vs val_last -2 to -39 (in-sample mirage)
